@@ -35,7 +35,7 @@ spec:
       -
         image: senthuran16/siddhi-runner:1.0
         name: siddhi-runner-1
-        command: ['sh', '-c', 'sleep 40 && /home/wso2carbon/init.sh']
+        # command: ['sh', '-c', 'sleep 40 && /home/wso2carbon/init.sh']
         ports:
         - containerPort: 80
         # env:
