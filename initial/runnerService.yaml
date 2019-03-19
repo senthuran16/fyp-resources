@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: siddhi-runner-1
+  labels:
+    node: siddhi-runner-1
+    pattern: wso2sp-pattern-distributed
+spec:
+  ports:
+    # ports that this service should serve on
+    -
+      name: 'http-port-1'
+      port: 9090
+      protocol: TCP
+    -
+      name: 'https-port-1'
+      port: 9543
+      protocol: TCP
+    -
+      name: 'https-port-2'
+      port: 9544
+      protocol: TCP
+    -
+      name: 'https-port-3'
+      port: 7070
+      protocol: TCP
+    -
+      name: 'https-port-4'
+      port: 7443
+      protocol: TCP
+
+  # label keys and values that must match in order to receive traffic for this service
+  selector:
+    node: siddhi-runner-1
+    pattern: wso2sp-pattern-distributed
+  clusterIP: None
