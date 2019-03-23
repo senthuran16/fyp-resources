@@ -1,0 +1,83 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: siddhi-runner
+  labels:
+    app: siddhi-runner
+    node: siddhi-runner
+    pattern: wso2sp-pattern-distributed
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: siddhi-runner
+        node: siddhi-runner
+        pattern: wso2sp-pattern-distributed
+    spec:
+      containers:
+      -
+        image: senthuran16/siddhi-runner:1.0
+        name: siddhi-runner
+        imagePullPolicy: Always
+        command: ['sh', '-c', sleep 40 && /home/wso2carbon/init.sh]
+        env:
+          -
+            name: WSO2_SERVER_PROFILE
+            value: "worker"
+          -
+            name: OFFSET
+            value: "0"
+          -
+            name: RECEIVER_NODE
+            value: "false"
+          -
+            name: NODE_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          -
+            name: NODE_PORT
+            value: "9443"
+
+
+        ports:
+          -
+            containerPort: 9090
+            protocol: "TCP"
+          -
+            containerPort: 9443
+            protocol: "TCP"
+          -
+            containerPort: 9543
+            protocol: "TCP"
+          -
+            containerPort: 9544
+            protocol: "TCP"
+          -
+            containerPort: 9711
+            protocol: "TCP"
+          -
+            containerPort: 9611
+            protocol: "TCP"
+          -
+            containerPort: 7711
+            protocol: "TCP"
+          -
+            containerPort: 7611
+            protocol: "TCP"
+          -
+            containerPort: 7070
+            protocol: "TCP"
+          -
+            containerPort: 7443
+            protocol: "TCP"
+
+
+        livenessProbe:
+          tcpSocket:
+            port: 9090
+          initialDelaySeconds: 300
+          periodSeconds: 20
