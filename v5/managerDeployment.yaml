@@ -1,0 +1,78 @@
+# apiVersion: extensions/v1beta1
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wso2sp-manager-1
+  labels:
+    app: wso2sp-manager-1
+    node: wso2sp-manager-1
+    pattern: wso2sp-pattern-distributed
+spec:
+  selector:  # required by the apps/v1 apiVersion
+    matchLabels:
+      app: wso2sp-manager-1
+      node: wso2sp-manager-1
+      pattern: wso2sp-pattern-distributed
+
+  strategy:
+    type: Recreate
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: wso2sp-manager-1
+        node: wso2sp-manager-1
+        pattern: wso2sp-pattern-distributed
+    spec:
+      containers:
+      -
+        # image: senthuran16/siddhi-runner:1.0
+        image: senthuran16/wso2sp-manager:4.3.0
+        name: wso2sp-manager-1
+        imagePullPolicy: Always
+        command: ['sh', '-c', sleep 40 && /home/wso2carbon/init.sh]
+        env:
+          -
+            name: WSO2_SERVER_PROFILE
+            value: "manager"
+          -
+            name: OFFSET
+            value: "0"
+          -
+            name: NODE_ID
+            value: "wso2sp-manager-1"
+          -
+            name: NODE_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          -
+            name: NODE_PORT
+            value: "9543"
+
+
+        ports:
+          -
+            containerPort: 9090
+            protocol: "TCP"
+          -
+            containerPort: 9543
+            protocol: "TCP"
+          -
+            containerPort: 9711
+            protocol: "TCP"
+          -
+            containerPort: 9611
+            protocol: "TCP"
+          -
+            containerPort: 7711
+            protocol: "TCP"
+          -
+            containerPort: 7611
+            protocol: "TCP"
+
+        livenessProbe:
+          tcpSocket:
+            port: 9543
+          initialDelaySeconds: 300
+          periodSeconds: 20

@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: test-app-group-1-1
+  labels:
+    pattern: wso2sp-pattern-distributed
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/session-cookie-name: "route"
+    nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
+spec:
+  tls:
+  - hosts:
+    - test-app-group-1-1
+  rules:
+  - host: test-app-group-1-1
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: test-app-group-1-1
+          servicePort: 9090
